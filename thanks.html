@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Welcome to Synapse Softworks Browser</title>
+<style>
+  /* GENERAL RESET */
+  * {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+  }
+
+  body {
+    font-family: "Segoe UI", sans-serif;
+    background: linear-gradient(135deg, #0e0f12, #1a1b1f);
+    color: #e6eef6;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-height: 100vh;
+    overflow-x: hidden;
+    position: relative;
+  }
+
+  /* PARTICLE-LIKE BACKGROUND */
+  body::before {
+    content: '';
+    position: absolute;
+    top: -50%;
+    left: -50%;
+    width: 200%;
+    height: 200%;
+    background: radial-gradient(circle, rgba(255,255,255,0.02) 1px, transparent 1px);
+    background-size: 50px 50px;
+    animation: moveBackground 30s linear infinite;
+    z-index: 0;
+  }
+
+  @keyframes moveBackground {
+    from {transform: translate(0,0);}
+    to {transform: translate(50px,50px);}
+  }
+
+  header {
+    padding: 80px 20px 100px;
+    text-align: center;
+    position: relative;
+    z-index: 1;
+  }
+
+  header h1 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    background: linear-gradient(90deg, #08f, #f39c12, #08f);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    animation: gradientText 5s infinite linear;
+  }
+
+  @keyframes gradientText {
+    0% {background-position: 0%;}
+    100% {background-position: 200%;}
+  }
+
+  header p {
+    font-size: 1.3rem;
+    color: #aaa;
+    margin-top: 15px;
+    opacity: 0;
+    animation: fadeInUp 1s forwards 0.5s;
+  }
+
+  section {
+    width: 90%;
+    max-width: 1000px;
+    display: flex;
+    justify-content: center;
+    flex-wrap: wrap;
+    gap: 50px;
+    margin-bottom: 150px;
+    position: relative;
+    z-index: 1;
+  }
+
+  .counter {
+    background: rgba(30,30,40,0.7);
+    border-radius: 20px;
+    padding: 30px;
+    width: 250px;
+    text-align: center;
+    box-shadow: 0 0 30px rgba(8,143,255,0.3);
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .counter:hover {
+    transform: translateY(-10px);
+    box-shadow: 0 0 50px rgba(243,156,18,0.7);
+  }
+
+  .counter h2 {
+    font-size: 3rem;
+    margin-bottom: 15px;
+    transition: all 0.3s ease;
+    color: #fff;
+  }
+
+  .counter p {
+    font-size: 1rem;
+    color: #bbb;
+    margin-bottom: 20px;
+  }
+
+  .progress-bar {
+    width: 100%;
+    height: 18px;
+    background: rgba(255,255,255,0.1);
+    border-radius: 10px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    width: 0%;
+    background: linear-gradient(90deg, #08f, #f39c12);
+    border-radius: 10px 0 0 10px;
+    transition: width 0.5s ease;
+  }
+
+  .lag-fill {
+    background: linear-gradient(90deg, #f39c12, #e74c3c);
+  }
+
+  /* ANIMATIONS */
+  .fade-in {
+    opacity: 0;
+    transform: translateY(30px);
+    animation: fadeInUp 1s forwards;
+  }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+</head>
+<body>
+
+<header class="fade-in">
+  <h1>Thanks for using Synapse Softworks Browser!</h1>
+  <p>We protect your privacy and optimize your browsing experience.</p>
+</header>
+
+<section>
+  <div class="counter fade-in">
+    <h2 id="trackers">0</h2>
+    <p>Current Trackers When Using Synapse Softworks</p>
+    <div class="progress-bar">
+      <div id="trackers-bar" class="progress-fill"></div>
+    </div>
+  </div>
+
+  <div class="counter fade-in">
+    <h2 id="lag">8</h2>
+    <p>Total Lag (out of 10)</p>
+    <div class="progress-bar">
+      <div id="lag-bar" class="progress-fill lag-fill"></div>
+    </div>
+  </div>
+</section>
+
+<script>
+  function animateValue(obj, start, end, duration) {
+    let startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const value = Math.round(start + (end - start) * (progress / duration));
+      if ((start < end && value <= end) || (start > end && value >= end)) {
+        obj.textContent = value;
+        requestAnimationFrame(step);
+      } else {
+        obj.textContent = end;
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  function animateBar(bar, startPercent, endPercent, duration) {
+    let startTime = null;
+    function step(timestamp) {
+      if (!startTime) startTime = timestamp;
+      const progress = timestamp - startTime;
+      const width = startPercent + (endPercent - startPercent) * (progress / duration);
+      bar.style.width = Math.min(Math.max(width, 0), 100) + '%';
+      if ((startPercent < endPercent && width <= endPercent) || (startPercent > endPercent && width >= endPercent)) {
+        requestAnimationFrame(step);
+      } else {
+        bar.style.width = endPercent + '%';
+      }
+    }
+    requestAnimationFrame(step);
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const trackers = document.getElementById('trackers');
+    const trackersBar = document.getElementById('trackers-bar');
+
+    animateBar(trackersBar, 0, 100, 1000);
+    animateValue(trackers, 0, 134, 1000);
+
+    setTimeout(() => {
+      animateValue(trackers, 134, 0, 2500);
+      animateBar(trackersBar, 100, 0, 2500);
+    }, 1000);
+
+    const lag = document.getElementById('lag');
+    const lagBar = document.getElementById('lag-bar');
+    animateValue(lag, 8, 0, 2500);
+    animateBar(lagBar, 100, 0, 2500);
+  });
+</script>
+
+</body>
+</html>
