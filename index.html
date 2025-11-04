@@ -78,7 +78,7 @@
     justify-content: center;
     flex-wrap: wrap;
     gap: 50px;
-    margin-bottom: 150px;
+    margin-bottom: 50px;
     position: relative;
     z-index: 1;
   }
@@ -144,6 +144,37 @@
       transform: translateY(0);
     }
   }
+
+  /* UPDATE PANEL */
+  .update-panel {
+    width: 90%;
+    max-width: 1000px;
+    background: linear-gradient(135deg, #08f, #f39c12);
+    border-radius: 20px;
+    padding: 30px;
+    color: #fff;
+    box-shadow: 0 0 40px rgba(0,0,0,0.5);
+    margin-bottom: 100px;
+    position: relative;
+    z-index: 1;
+    animation: fadeInUp 1s forwards 0.5s;
+  }
+
+  .update-panel h2 {
+    margin-bottom: 15px;
+    font-size: 2rem;
+  }
+
+  .update-panel ul {
+    list-style: disc;
+    padding-left: 20px;
+  }
+
+  .update-panel ul li {
+    margin-bottom: 10px;
+    font-size: 1.1rem;
+  }
+
 </style>
 </head>
 <body>
@@ -170,6 +201,17 @@
     </div>
   </div>
 </section>
+
+<!-- New Update Panel -->
+<div class="update-panel fade-in">
+  <h2>What Has Been Added In The Latest Update</h2>
+  <ul>
+    <li>Placeholder for new feature 1</li>
+    <li>Placeholder for new feature 2</li>
+    <li>Placeholder for new feature 3</li>
+    <li>Placeholder for new feature 4</li>
+  </ul>
+</div>
 
 <script>
   function animateValue(obj, start, end, duration) {
